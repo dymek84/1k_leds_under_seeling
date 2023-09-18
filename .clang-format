@@ -1,0 +1,20 @@
+# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+BasedOnStyle: Google
+Standard: c++11
+AllowShortFunctionsOnASingleLine: Empty
+IncludeBlocks: Preserve
+IndentPPDirectives: AfterHash
+DerivePointerAlignment: false
+
+# Always break after if to get accurate coverage
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# BasedOnStyle: Microsoft
+
+ColumnLimit: 170
+IndentWidth: 3
+# IncludeBlocks: Merge
+IndentGotoLabels: true
+KeepEmptyLinesAtTheStartOfBlocks: true

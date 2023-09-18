@@ -1,0 +1,765 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+
+    <title>LED Controller</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <!-- Custom fonts for this template-->
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css"
+        rel="stylesheet">
+    <script
+        src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+
+
+    <link href="main.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        function submitMessage() {
+            alert("Restarting ESP");
+            setTimeout(function () { document.location.reload(false); }, 500);
+        }
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="tab btn navbar fixed-top  bg-dark bg-gradient border-bottom-danger">
+        <button class="tablinks btn btn-primary" onclick="openCity(event, 'Led')" id="defaultOpen">Led</button>
+        <button class="tablinks btn btn-danger" onclick="openCity(event, 'Matrix')">Matrix</button>
+        <button class="tablinks btn btn-warning" onclick="openCity(event, 'Clock')">Clock</button>
+        <button class="tablinks btn btn-success" onclick="openCity(event, 'Settings')">Settings</button>
+        <button>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="darkSwitch" />
+                <label class="custom-control-label" for="darkSwitch"></label>
+            </div>
+        </button>
+
+    </div>
+    <!-- Tab content -->
+
+    <div id="Led" class="tabcontent">
+        <!-- Tab content  LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED -->
+        <h1 class="display-3  py-2 mt-5 text-4xl font-weight-bold text-center text-primary">
+            Led Strip</h1>
+        <div class="row">
+            <div class="col-xl-4 col-md-6 mb-4">
+
+                <div class="card  mb-4 border-left-primary shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Effects</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    <div id="patStrNumber">%currentPatStr%/%strPatMax% </div>
+                                    <div id="_brigtness">Current Pattern Name</div>
+                                    <h4 id="patStrName">%patternStrName%</h4>
+
+                                </div>
+                                <div class="h5 mb-5 font-weight-bold text-gray-800">
+                                    <div id="isAudioS">
+                                        <div class=' bg-gray-600 text-warning' id='isAudio'
+                                            style='font-weight: 900;display: inline-block;text-decoration: underline #f6c23e;'>
+                                            STATIC</div>
+                                    </div>
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <div id="isAudio"><button class="btn btn-primary btn-custom btn-lg"
+                                            onclick="stripeMessage('pattern','prev')">Prev</button>&nbsp;
+                                        &nbsp; &nbsp; &nbsp;
+                                        <button class="btn btn-primary btn-lg"
+                                            onclick="stripeMessage('pattern','next')">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab content  LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Color Palette</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="font-weight-bold text-primary text-uppercase mb-1">
+                                    <div class="text-center" id="colorPaletteStripe"
+                                        style="height: 40px; border-radius:12px; border: 2px solid #00000052;%gradientStripe%">
+                                        <div class="align-text-bottom font-weight-bolder h2 text-white" id="palStrName"
+                                            style="-webkit-text-stroke: 1px black;">
+                                            %paletteStripe%
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="h5 mt-5 mb-0 font-weight-bold text-gray-800">
+                                    <button class="btn btn-primary btn-lg"
+                                        onclick="stripeMessage('palette','prev')">Prev</button>&nbsp;
+                                    &nbsp; &nbsp; &nbsp;
+                                    <button class="btn  btn-primary btn-lg"
+                                        onclick="stripeMessage('palette','next')">Next</button><BR><BR>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary border-top shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Led Strip Brightness</h6>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .aaa::-webkit-slider-thumb {
+                                background-color: #f6c23e;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range custom-range aaa col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="stripeBright" type="range" value="%sBright%" min="0" max="100"
+                                    onchange="stripeMessage('brightness',this.value)"></input>
+                                <span id="rangeValueSBright"
+                                    class="range-slider__value text-primary font-weight-bolder h4 text-right col-2">%sBright%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary text-center">Led Animation Speed</h6>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .bbb::-webkit-slider-thumb {
+                                background-color: #4e73df;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range  custom-range bbb col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="stripeSpeed" type="range" value="%stripeSpeed%" min="0" max="100"
+                                    onchange="stripeMessage('speed',this.value)"></Input>
+                                <span id="rangeValueSSpeed"
+                                    class=" range-slider__value text-primary font-weight-bolder h4 text-right col-2">%stripeSpeed%</span>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED LED -->
+
+        </div>
+    </div>
+
+    <div id="Matrix" class="tabcontent">
+        <!-- Tab content  Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix -->
+        <h1 class="display-3  py-2  mt-5 text-4xl font-weight-bold text-center text-danger">
+            Matrix</h1>
+
+        <div class="row">
+            <!-- Tab content  Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix -->
+            <div class="col-xl-4 col-md-6 mb-4">
+
+                <div class="card  mb-4 border-left-danger shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-danger text-center">Effects</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    <div id="patMatNumber">%currentPatMat%/%matPatMax% </div>
+                                    <div id="_brigtness">Current Pattern Name</div>
+                                    <h4 id="patMatName">%patternMatName%</h4>
+
+                                </div>
+                                <div class="h5 mb-5 font-weight-bold text-gray-800">
+                                    <div id="isAudioM">%ISAUDIOM%</div>
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <div id="isAudio"><button class="btn btn-danger btn-custom btn-lg"
+                                            onclick="matrixMessage('pattern','prev')">Prev</button>&nbsp;
+                                        &nbsp; &nbsp; &nbsp;
+                                        <button class="btn btn-danger btn-lg"
+                                            onclick="matrixMessage('pattern','next')">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-xl-4 col-md-6 mb-4">
+
+                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+
+                    <select id="displayList" class="form-control custom-select">
+                        <option>1 Hour</option>
+                        <option>2 Hours</option>
+                        <option>3 Hours</option>
+                        <option>4 Hours</option>
+                        <option>5 Hours</option>
+                    </select>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <div id="isAudio">
+                            <button type="button" id="previousDisplayButton" class="btn btn-outline-secondary">
+                                ← Previous
+                            </button>
+                            <button type="button" id="nextDisplayButton" class="btn btn-outline-secondary">
+                                Next →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Tab content  Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-danger text-center">Color Palette</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="text-xs  font-weight-bold text-danger text-uppercase mb-1">
+                                    <div class="text-center" id="colorPaletteMatrix"
+                                        style="height: 40px; border-radius:12px; border: 2px solid #00000052;%gradientMatrix%">
+                                        <div class="align-text-bottom font-weight-bolder h2 text-white" id="palMatName"
+                                            style="-webkit-text-stroke: 1px black;">
+                                            %paletteMatrix%
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="h5 mt-5 mb-0 font-weight-bold text-gray-800">
+                                    <button class="btn btn-danger btn-lg"
+                                        onclick="matrixMessage('palette','prev')">Prev</button>&nbsp;
+                                    &nbsp; &nbsp; &nbsp;
+                                    <button class="btn  btn-danger btn-lg"
+                                        onclick="matrixMessage('palette','next')">Next</button><BR><BR>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-danger text-center">Matrix Brightness</h6>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .ccc::-webkit-slider-thumb {
+                                background-color: #e74a3b;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range custom-range ccc col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="MatrixBright" type="range" value="%mBright%" min="0" max="100"
+                                    onchange="matrixMessage('brightness',this.value)"></input>
+                                <span id="rangeValueMBright"
+                                    class="range-slider__value text-danger font-weight-bolder h4 text-right col-2">%mBright%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-header py-3 ">
+                        <h6 class="m-0 font-weight-bold text-danger text-center">Matrix Animation Speed</h6>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .ddd::-webkit-slider-thumb {
+                                background-color: #e74a3b;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range  custom-range ddd col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="MatrixSpeed" type="range" value="%matrixSpeed%" min="0" max="100"
+                                    onchange="matrixMessage('speed',this.value)"></Input>
+                                <span id="rangeValueMSpeed"
+                                    class=" range-slider__value text-danger font-weight-bolder h4 text-right col-2">%matrixSpeed%</span>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix Matrix -->
+
+        </div>
+    </div>
+    <div id="Clock" class="tabcontent">
+        <!-- Tab content  Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock -->
+        <h1 class="display-3  py-2 mt-5 text-4xl font-weight-bold text-center text-warning">
+            Clock</h1>
+        <div class="row">
+            <div class="col-xl-4 col-md-6 mb-4">
+
+                <div class="card  mb-4 border-left-warning shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning text-center">Effects</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    <div id="patClockNumber">%currentPatClock%/%ClockPatMax% </div>
+                                    <div id="_brigtness">Current Pattern Name</div>
+                                    <h4 id="patClockName">%patternClockName%</h4>
+
+                                </div>
+
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <div id="isAudio"><button class="btn btn-warning btn-custom btn-lg"
+                                            onclick="clockMessage('pattern','prev')">Prev</button>&nbsp;
+                                        &nbsp; &nbsp; &nbsp;
+                                        <button class="btn btn-warning btn-lg"
+                                            onclick="clockMessage('pattern','next')">Next</button>
+                                    </div><br>
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning text-center">Color Palette</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="font-weight-bold text-warning text-uppercase mb-1">
+                                    <div class="text-center" id="colorPaletteClock"
+                                        style="height: 40px; border-radius:12px; border: 2px solid #00000052;%gradientClock%">
+                                        <div class="align-text-bottom font-weight-bolder h2 text-white"
+                                            id="palClockName" style="-webkit-text-stroke: 1px black;">
+                                            %paletteClock%
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="h5 mt-5 mb-0 font-weight-bold text-gray-800">
+                                    <button class="btn btn-warning btn-lg"
+                                        onclick="clockMessage('palette','prev')">Prev</button>&nbsp;
+                                    &nbsp; &nbsp; &nbsp;
+                                    <button class="btn  btn-warning btn-lg"
+                                        onclick="clockMessage('palette','next')">Next</button><BR><BR>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-warning text-center">Matrix Clock On/Off</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center text-dark">
+
+                                <BR><input id="switch-event-clock" type="checkbox" data-toggle="switchbutton"
+                                    %CLOCKONOFF% data-onlabel="Hide the clock" data-offlabel="Show the clock"
+                                    data-onstyle="success" onchange="clockMessage('clockOnOff','event')" data-offstyle="danger"
+                                    data-width="210" data-height="40" data-style="slow">
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock -->
+            -- <div class="col-xl-12 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-warning text-center">Choose a Clock Color</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center text-warning">
+                                <style type="text/css">
+                                    .btn-color {
+                                        border: 2px solid rgb(0, 0, 0);
+                                        width: 92px;
+                                        rgb(0, 0, 0) padding: 10px;
+                                        -webkit-text-stroke: 1px #ffffff66;
+                                        margin: 6px;
+                                    }
+                                </style>
+
+                                <button class="btn-color btn" style="background: hsl(0, 50&#37;, 100&#37;);"
+                                    onclick="clockMessage('color','white')" title="Red">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(15, 0&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','gray')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(30, 100&#37;, 0&#37;);"
+                                    onclick="clockMessage('color','black')" title="Orange">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(0, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','0')" title="Red">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(15, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','15')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(30, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','30')" title="Orange">&nbsp;</button>
+
+
+                                <button class="btn-color btn" style="background: hsl(45, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','45')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(60, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','60')" title="Yellow">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(75, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','75')" title="Red">&nbsp;</button>
+
+
+
+                                <button class=" btn-color btn" style="background: hsl(90, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','90')" title="Chartreuse">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(105, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','105')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(120, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','120')" title="Green">&nbsp;</button>
+
+                                <button class="btn-color btn" style="background: hsl(135, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','135')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(150, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','150')" title="Spring Green">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(165, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','165')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(180, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','180')" title="Cyan">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(195, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','195')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(210, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','210')" title="Azure">&nbsp;</button>
+
+
+                                <button class="btn-color btn" style="background: hsl(225, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','225')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(240, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','240')" title="Blue">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(255, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','255')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(270, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','270')" title="Violet">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(285, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','285')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(300, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','300')" title="Magenta">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(315, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','315')" title="Red">&nbsp;</button>
+                                <button class=" btn-color btn" style="background: hsl(330, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','330')" title="Rose">&nbsp;</button>
+                                <button class="btn-color btn" style="background: hsl(345, 100&#37;, 50&#37;);"
+                                    onclick="clockMessage('color','345')" title="Red">&nbsp;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content  Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock -->
+            <!--  <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning border-top shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning text-center">Clock Strip Brightness</h6>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .eee::-webkit-slider-thumb {
+                                background-color: #f6c23e;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range custom-range eee col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="ClockBright" type="range" value="%sBright%" min="0" max="100"
+                                    onchange="rangeStripBright(this.value)"></input>
+                                <span id="rangeValueSBright"
+                                    class="range-slider__value text-warning font-weight-bolder h4 text-right col-2">%sBright%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning text-center">Clock Animation Speed</h6>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range  custom-range eee col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="ClockSpeed" type="range" value="%ClockSpeed%" min="0" max="100"
+                                    onchange="rangeStripSpeed(this.value)"></Input>
+                                <span id="rangeValueSSpeed"
+                                    class=" range-slider__value text-warning font-weight-bolder h4 text-right col-2">%ClockSpeed%</span>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!-- Tab content  Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock Clock -->
+
+        </div>
+    </div>
+    <div id="Settings" class="tabcontent">
+        <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+
+
+        <h1 class="display-3 py-2 mt-5 text-4xl font-weight-bold text-center text-secondary">
+            Settings</h1>
+        <div class="row">
+
+
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-dark shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-dark text-center">Power On/Off</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center text-dark">
+                                <h3>Turn ON/OFF all leds</h3>
+                                <BR><input id="switch-event" type="checkbox" data-toggle="switchbutton" %POWEROFFON%
+                                    data-onlabel="Switch OFF the power" data-offlabel="Switch ON the power"
+                                    data-onstyle="success" onchange="settingMessage('powerOnOff','event')" data-offstyle="danger"
+                                    data-width="210" data-height="60" data-style="slow"><BR><BR>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-dark shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-dark text-center">Welcome Message</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center text-dark">
+
+                                <div id="messageHolder">(%welcomeMessage%)</div>
+                                <div id="brightnessbox">
+                                    <input id="WMessage" type="text" placeholder="Welcome Message" class="form-control "
+                                        aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-lg"></input>
+                                </div><BR><button class="btn btn-dark" onclick="settingMessage()">Set
+                                    Message</button><BR>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-info text-center">Welcome Message</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center text-info">
+
+                                <h3>Show Current Welcome Message</h3>
+                                <BR><button class="btn btn-info" onclick="settingMessage()">Show Message</button><BR><BR>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-primary text-center">Microphone Sensitivity</h4>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .aaa::-webkit-slider-thumb {
+                                background-color: #2653d4;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range custom-range aaa col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="micSens" type="range" value="%micSens%" min="5" max="255"
+                                    onchange="settingMessage('micSens',this.value)"></Input>
+                                <span id="rangeValueMicSens"
+                                    class="range-slider__value text-primary font-weight-bolder h4 text-right col-2">%micSens%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-primary text-center">Noise Supression</h4>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .aaa::-webkit-slider-thumb {
+                                background-color: #2653d4;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range custom-range aaa col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="noise" type="range" value="%micNoise%" min="5" max="255"
+                                    onchange="settingMessage('micNoise',this.value)"></Input>
+                                <span id="rangeValueNoise"
+                                    class="range-slider__value text-primary font-weight-bolder h4 text-right col-2">%micNoise%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-primary text-center">Audio Smoothing</h4>
+                    </div>
+                    <div class="card-body">
+                        <style type="text/css">
+                            .aaa::-webkit-slider-thumb {
+                                background-color: #2653d4;
+                            }
+                        </style>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center align-content-center">
+                                <input class="range custom-range aaa col-8 float-left" id="slider"
+                                    oninput="this.closest('div').querySelector('.range-slider__value').innerHTML = this.value "
+                                    id="smooth" type="range" value="%SMooTH%" min="1" max="9"
+                                    onchange="settingMessage('audioSmoothing',this.value)"></Input>
+                                <span id="rangeValueSmooth"
+                                    class="range-slider__value text-primary font-weight-bolder h4 text-right col-2">%SMooTH%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+
+            <!-- Tab content Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings Settings  -->
+
+        </div>
+    </div>
+    <section>
+        <div class="col-xl-12 col-md-6 mb-4">
+
+            <div class="card  mb-4 border-left-primary shadow h-100 py-2">
+                <div class="card-header py-3 text-center">
+                    <h7 class="m-0 text-xs text-primary ">
+                        Designed by: Dymek - 2023 (dymek1984@gmail.com)
+                    </h7>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+
+
+</body>
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+<script src="main.js"></script>
+<script>
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+</script>
+
+</html>
